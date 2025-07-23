@@ -15,8 +15,8 @@ import axios from 'axios';
 // const API_URL = getApiUrl();
 
 
-// const API_URL = 'https://meetkats-backend.onrender.com';
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://meetkats-backend.onrender.com';
+// const API_URL = 'http://localhost:3000';
 console.log(`API URL: ${API_URL}`);
 
 // Axios instance

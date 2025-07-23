@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { saveQuizResult } from "../../supabase/quizApi";
+import { fetchQuizResultByEmail } from "../../supabase/quizApi";
 
 // Hardcoded quiz data
 const hardcodedQuiz = {
@@ -152,6 +153,26 @@ const QuizPlatform = () => {
     if (!loading && !user) {
       navigate("/login", { replace: true });
     }
+  }, [user, loading, navigate]);
+
+  // Redirect to dashboard if user already attempted quiz
+  React.useEffect(() => {
+    const checkQuizAttempt = async () => {
+      if (!loading && user && user.email) {
+        try {
+          const result = await fetchQuizResultByEmail(user.email);
+          if (result) {
+            navigate("/dashboard", { replace: true });
+          }
+        } catch (err) {
+          // If error is not 'no rows found', log it
+          if (!err.code || err.code !== "PGRST116") {
+            console.error("Error checking quiz attempt:", err);
+          }
+        }
+      }
+    };
+    checkQuizAttempt();
   }, [user, loading, navigate]);
 
   const [currentQuiz] = useState(hardcodedQuiz);
